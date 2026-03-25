@@ -4,6 +4,7 @@
 import connectDB from "./config/mongodb.js";
 import connectCloudinary from "./config/cloudinary.js";
 import userRouter from "./routes/userRoute.js";
+import productRouter from "./routes/productRoute.js";
 
 
  //APP config `
@@ -18,6 +19,7 @@ import userRouter from "./routes/userRoute.js";
 
  // Api endpounts
 app.use("/api/v1/user", userRouter);
+app.use("/api/v1/product", productRouter);
 
  app.get("/", (req,res)=>{
     res.send("API Is Working")
