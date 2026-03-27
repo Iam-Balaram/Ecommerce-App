@@ -34,7 +34,7 @@ const addProduct = asyncHandler( async (req,res)=>{
             image: imageUrl,
             date: Date.now()
         });
-        
+
         try {
             await product.save();
         } catch (error) {
@@ -50,18 +50,44 @@ const addProduct = asyncHandler( async (req,res)=>{
 
 
 // function for list product
-const listProducts = async (req, res) => {
+const listProducts =asyncHandler( async (req, res) => {
+    
+        const products = await ProductModel.find({});
 
-}
+        if (!products || products.length === 0){
+            throw new ApiError(404, "No Products found")
+        }
+
+        return res.status(200).json(
+            new ApiResponse(200, products, "Product Find out successfully")
+        )
+        
+})
 
 // function for remove product
 const removeProduct = async (req, res) => {
+    try {
+        await ProductModel.findByIdAndDelete(req.body.id)
+        res.json({success:true, message: "Product Removed"})
+    } catch (error) {
+        console.log(error.message);
+        
+        
+    }
 
 }
 
 // function for single product info
-const singleProduct = async (req, res) => {
-
-}
+const singleProduct = asyncHandler( async (req, res) => {
+        const { productId } = req.body
+        const product = await ProductModel.findById(productId)
+        
+        if (!product){
+            throw new ApiError(404, "Product Not Found")
+        }
+        return res.status(200).json(
+            new ApiResponse(200, product, "Product fetched Successfully")
+        )
+})
 
 export {addProduct, listProducts, removeProduct, singleProduct};
