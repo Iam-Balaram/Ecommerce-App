@@ -3,7 +3,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import userModel from "../models/userModels.js"
 import { asyncHandler } from "../utils/asyncHandler.js";
-import { ApiError }from "../utils/apiError.js";
+import { ApiError }from "../utils/ApiError.js"
 import { ApiResponse } from "../utils/ApiResponse.js";
 
 const createToken = (id)=>{
@@ -80,8 +80,23 @@ const registerUser = asyncHandler(async (req, res) => {
 
 
 //Rotue for admin login
-const adminLogin = async (req, res) => {
+const adminLogin = asyncHandler( async (req, res) => {
+
+        const {email, password} = req.body;
+
+        if (!email || !password){
+            throw new ApiError(400, "Please Enter all the fields")
+        }
+
+        if (email === process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASSWORD){
+            const token = jwt.sign(email+password, process.env.JWT_SECRET)
+            return res.status(200).json(
+                new ApiResponse(200, {token}, "Admin Login Success")
+            )
+        }else {
+            throw new ApiError(400, "Invalid Credentials")
+        }  
     
-}
+})
 
 export { loginUser, registerUser, adminLogin }; 
