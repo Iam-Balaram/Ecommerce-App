@@ -12,9 +12,10 @@ const Login = ({setToken}) => {
        try {
          e.preventDefault()
          const response = await axios.post(backendUrl+"/api/v1/user/admin", {email, password}  ) 
+         
 
          if (response.data.success) {
-            setToken(response.data.token)
+            setToken(response.data.data.token)
          }
          else{
             toast.error(response.data.message)

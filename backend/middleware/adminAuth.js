@@ -7,7 +7,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 const adminAuth =asyncHandler( async (req, res, next)=>{
 
         const { token }= req.headers;
-
+        
         if (!token){
             throw new ApiError(401, "you are not authorized")
         }
@@ -15,8 +15,9 @@ const adminAuth =asyncHandler( async (req, res, next)=>{
 
         if (token_decoded !== process.env.ADMIN_EMAIL + process.env.ADMIN_PASSWORD){
             throw new ApiError(401, "you are not authorized")
-        }       
-        next();
+        }     
+
+    next();
 });
 
 export default adminAuth;
