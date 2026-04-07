@@ -42,10 +42,8 @@ const Add = ({token}) => {
       console.log("TOKEN:", token);
       const response = await axios.post(
         backendUrl + "/api/v1/product/add", 
-        formData,   {
-          headers: 
-            {token}}
-      )
+        formData,   
+        { headers: {token} } )
       console.log(response);
 
       if (response.data.success){
@@ -60,14 +58,10 @@ const Add = ({token}) => {
       }else{
         toast.error(response.data.message)
       }
-      
-      
     } catch (error) {
       console.log(error.message);
       
-      
     }
-
   }
 
   return (
