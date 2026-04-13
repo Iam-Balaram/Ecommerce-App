@@ -4,7 +4,8 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-export const ShopContext = createContext();
+const ShopContext = createContext();
+export { ShopContext }
 
 const ShopContextProvider = (props)=>{
     const currency = "$";
@@ -38,6 +39,16 @@ const ShopContextProvider = (props)=>{
             cartData[itemId][size] = 1 ;
         }
         setCartItems(cartData);
+        if (token){
+            try {
+                await axios.post(backendUrl+ "/api/v1/cart/add", {itemId,size}, { headers: { token } })
+                console.log(token);
+            } catch (error) {
+                console.log(error.message);
+                toast.error(error.message)
+                               
+            }
+        }
     }
 
     const getCartCount = ()=>{
@@ -89,7 +100,6 @@ const ShopContextProvider = (props)=>{
             }
         } catch (error) {
             console.log(error.message);
-            
             toast.error("Error fetching products"); 
         }
     }

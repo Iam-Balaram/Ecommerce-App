@@ -15,13 +15,15 @@ const Login = () => {
 
   const onSubmitHandler = async (event)=>{
     event.preventDefault();
+    
     try {
       if (currentState === "Sign Up"){
         const response = await axios.post(backendUrl+ "/api/v1/user/register", {name, email, password})
+        const token = response.data.data.token;
         if (response.data.success){
-          setToken(response.data.data);
-          
-          localStorage.setItem("token", response.data.data);
+          setToken(token);
+
+          localStorage.setItem("token", token);
         }else{
           toast.error(response.data.message);
         }
@@ -29,10 +31,11 @@ const Login = () => {
 
       }else{
         const response = await axios.post(backendUrl+ "/api/v1/user/login", {email, password})
+        const token = response.data.data.token;
         if (response.data.success){
-          setToken(response.data.data);
-          localStorage.setItem("token", response.data.data);
-          console.log(response.data.data.token);
+          setToken(token);
+          localStorage.setItem("token", token);
+          console.log(token);
           
         }else{
           toast.error(response.data.message);
