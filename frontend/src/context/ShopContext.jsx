@@ -67,11 +67,21 @@ const ShopContextProvider = (props)=>{
         return totalCount;
     }
 
+
     const updateQuantity = async (itemId, size, quantity)=>{
         let cartData = structuredClone(cartItems);
         cartData[itemId][size] = quantity;
         setCartItems(cartData);
+        if (token){ 
+            try {
+                await axios.post(backendUrl+ "/api/v1/cart/update", {itemId,size,quantity}, { headers: { token } })
+            } catch (error) {
+                console.log(error.message);
+                toast.error(error.message);
+            }
+        }
     }
+
 
     const getCartAmount = ()=>{
         let totalAmount = 0;
@@ -83,7 +93,7 @@ const ShopContextProvider = (props)=>{
                         totalAmount += itemInfo.price * cartItems[items][item];
                     }
                 } catch (error) {
-                    console.log(error,message);
+                    console.log(error.message);
                 }
             }
         }
@@ -104,13 +114,32 @@ const ShopContextProvider = (props)=>{
         }
     }
 
+
+    const getUserCart = async( token ) =>{
+        try {
+            const response = await axios.post(backendUrl + "/api/v1/cart/get",{}, { headers: { token } })
+            if(response.data.success){
+                setCartItems(response.data.data.cartData);
+                console.log(response.data.data.cartData);
+                
+            }else {
+                toast.error(response.data.message);
+            }
+        } catch (error) {
+            console.log(error.message);
+            toast.error("Error fetching user cart");
+        }
+    }
+
+
     useEffect(()=>{
         getProductsData();
     },[]) 
     
     useEffect(()=>{
         if (!token && localStorage.getItem("token")){
-            setToken(localStorage.getItem("token"));
+            setToken(localStorage.getItem("token"))
+            getUserCart(localStorage.getItem("token"))
         }
     },[])
 
