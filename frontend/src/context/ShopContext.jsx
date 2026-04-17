@@ -86,7 +86,10 @@ const ShopContextProvider = (props)=>{
     const getCartAmount = ()=>{
         let totalAmount = 0;
         for (const items in cartItems){
-            let itemInfo = products.find((product)=> product._id === items);
+            let itemInfo = products.find((product)=> product._id.toString() === items.toString());
+            
+            if (!itemInfo) continue;
+
             for (const item in cartItems[items]){
                 try {
                     if (cartItems[items][item]> 0){
