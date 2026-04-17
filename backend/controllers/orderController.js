@@ -36,9 +36,8 @@ const placeOrder = asyncHandler( async (req, res) => {
 }
 );
 // Placing order using Stripe Payment Gateway
-const placeOrderStripe = async (req, res) => {
-
-}
+const placeOrderStripe = asyncHandler( async (req, res) => {
+})
 
 // Placing order using Razorpay Payment Gateway
 const placeOrderRazorpay = async (req, res) => {
@@ -55,9 +54,20 @@ const allOrders = async (req, res) => {
 
 // User Order data for Frontend
 
-const userOrders = async (req, res) => {
+const userOrders = asyncHandler( async (req, res) => {
+        const { userId } = req.body;
 
-}
+    if(!userId){
+        throw new ApiError(400, "User ID is required");
+    }
+
+    const orders = await orderModel.find({ userId });
+
+    return res.status(200).json(
+        new ApiResponse(200, { orders }, "Orders retrieved successfully")
+    );
+});
+
 
 //update order status from Admin panel
 const updateStatus = async (req, res) => {

@@ -10,7 +10,7 @@ const BestSeller = () => {
 
     useEffect(()=>{
         const bestProduct = products.filter((item)=>(item.bestSeller));
-        console.log(bestProduct);
+
         setBestSeller(bestProduct.slice(0,5))
     },[products])
 
