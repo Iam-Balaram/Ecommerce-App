@@ -56,7 +56,7 @@ const allOrders = asyncHandler( async (req, res) => {
         }
 
         return res.status(200).json(
-            new ApiResponse(200, orders, "Orders retrieved successfully")
+            new ApiResponse(200, {orders}, "Orders retrieved successfully")
         );
 
 })
@@ -81,8 +81,19 @@ const userOrders = asyncHandler( async (req, res) => {
 
 
 //update order status from Admin panel
-const updateStatus = async (req, res) => {
+const updateStatus = asyncHandler( async (req, res) => {
+    
+        const { orderId, status} = req.body
+        
+        if(!orderId || !status){
+            throw new ApiError(400, "Order ID and status are required")
+        }
 
-}
+        await orderModel.findByIdAndUpdate(orderId, {status})
+        return res.status(200).json(
+            new ApiResponse(200, null, "Order status updated successfully")
+        );
+
+})
 
 export { placeOrder, placeOrderStripe, placeOrderRazorpay, allOrders, userOrders, updateStatus }    
