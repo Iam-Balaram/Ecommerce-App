@@ -47,8 +47,19 @@ const placeOrderRazorpay = async (req, res) => {
 
 // All Order data for Admin panel
 
-const allOrders = async (req, res) => {
-}
+const allOrders = asyncHandler( async (req, res) => {
+    
+        const orders = await orderModel.find({});
+
+        if(!orders){
+            throw new ApiError(500, "Failed to retrieve orders")
+        }
+
+        return res.status(200).json(
+            new ApiResponse(200, orders, "Orders retrieved successfully")
+        );
+
+})
 
 
 
